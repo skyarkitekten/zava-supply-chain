@@ -41,9 +41,6 @@ Thumbs.db
 workshop/LAB01-inventory-agent/**
 !workshop/LAB01-inventory-agent/
 !workshop/LAB01-inventory-agent/**/*.md
-!workshop/LAB01-inventory-agent/ZaraAgent/
-!workshop/LAB01-inventory-agent/ZaraAgent/*.csproj
-!workshop/LAB01-inventory-agent/ZaraAgent/*.cs
 workshop/LAB02-procurement-toolbox/**
 !workshop/LAB02-procurement-toolbox/
 !workshop/LAB02-procurement-toolbox/**/*.md
