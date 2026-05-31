@@ -10,13 +10,15 @@ from agent_framework.foundry import FoundryChatClient
 from azure.identity.aio import AzureCliCredential
 
 # Make the shared workshop fixtures importable for this LAB script.
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "data"))
+# File is 4 levels deep under workshop/ (Code/LAB01-inventory-agent/python/),
+# so parents[3] resolves to the workshop/ root where data/ lives.
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "data"))
 from zava_data import find_po, find_stock, load_purchase_orders
 
 
 def load_env() -> None:
     """Load workshop/.env into process environment when available."""
-    env_path = Path(__file__).resolve().parents[1] / ".env"
+    env_path = Path(__file__).resolve().parents[3] / ".env"
     if not env_path.exists():
         return
 
