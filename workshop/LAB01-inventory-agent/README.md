@@ -1,6 +1,7 @@
 # LAB 1 — Warehouse Assistant Zara: Single Agent + Function Tools + MCP
 
 > **Powered by SKILL** (pick one track):
+>
 > - Python: [`agent-framework-azure-ai-py`](../../.github/skills/agent-framework-azure-ai-py/SKILL.md)
 > - .NET (C#): [`agent-framework-azure-ai-csharp`](../../.github/skills/agent-framework-azure-ai-csharp/SKILL.md)
 >
@@ -13,10 +14,10 @@
 
 This LAB ships **two equivalent implementations**. Same story, same fixtures, same acceptance criteria — pick one:
 
-| Track | Build artefact | Skill files to load | Data helper |
-|-------|----------------|---------------------|-------------|
-| 🐍 **Python** | `zara_agent.py` | [`agent-framework-azure-ai-py/SKILL.md`](../../.github/skills/agent-framework-azure-ai-py/SKILL.md) + [`references/tools.md`](../../.github/skills/agent-framework-azure-ai-py/references/tools.md) + [`references/mcp.md`](../../.github/skills/agent-framework-azure-ai-py/references/mcp.md) + [`references/threads.md`](../../.github/skills/agent-framework-azure-ai-py/references/threads.md) | [`workshop/data/zava_data.py`](../data/zava_data.py) |
-| 🟦 **.NET (C#)** | `ZaraAgent/` console app | [`agent-framework-azure-ai-csharp/SKILL.md`](../../.github/skills/agent-framework-azure-ai-csharp/SKILL.md) + [`references/tools.md`](../../.github/skills/agent-framework-azure-ai-csharp/references/tools.md) + [`references/mcp.md`](../../.github/skills/agent-framework-azure-ai-csharp/references/mcp.md) + [`references/threads.md`](../../.github/skills/agent-framework-azure-ai-csharp/references/threads.md) | [`workshop/data/ZavaData.cs`](../data/ZavaData.cs) |
+| Track            | Build artefact           | Skill files to load                                                                                                                                                                                                                                                                                                                                                                                                     | Data helper                                          |
+| ---------------- | ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| 🐍 **Python**    | `zara_agent.py`          | [`agent-framework-azure-ai-py/SKILL.md`](../../.github/skills/agent-framework-azure-ai-py/SKILL.md) + [`references/tools.md`](../../.github/skills/agent-framework-azure-ai-py/references/tools.md) + [`references/mcp.md`](../../.github/skills/agent-framework-azure-ai-py/references/mcp.md) + [`references/threads.md`](../../.github/skills/agent-framework-azure-ai-py/references/threads.md)                     | [`workshop/data/zava_data.py`](../data/zava_data.py) |
+| 🟦 **.NET (C#)** | `ZaraAgent/` console app | [`agent-framework-azure-ai-csharp/SKILL.md`](../../.github/skills/agent-framework-azure-ai-csharp/SKILL.md) + [`references/tools.md`](../../.github/skills/agent-framework-azure-ai-csharp/references/tools.md) + [`references/mcp.md`](../../.github/skills/agent-framework-azure-ai-csharp/references/mcp.md) + [`references/threads.md`](../../.github/skills/agent-framework-azure-ai-csharp/references/threads.md) | [`workshop/data/ZavaData.cs`](../data/ZavaData.cs)   |
 
 The Python track is documented in [§Tasks](#tasks); the .NET track is documented in [§.NET implementation path](#net-implementation-path). The acceptance criteria are identical.
 
@@ -26,13 +27,13 @@ The Python track is documented in [§Tasks](#tasks); the .NET track is documente
 
 Mei, the warehouse supervisor at ZavaShop's Seattle fulfillment center, complains:
 
-> *"In a single morning I get hit on WeChat, email and phone 60 times with 'how many SKU-7421 do we have?', 'has the batch of pots from Yiwu landed yet?'. I keep flipping between the WMS, the TMS and an Excel file."*
+> _"In a single morning I get hit on WeChat, email and phone 60 times with 'how many SKU-7421 do we have?', 'has the batch of pots from Yiwu landed yet?'. I keep flipping between the WMS, the TMS and an Excel file."_
 
 The CTO decides: build a warehouse assistant called **Zara** first, so Mei can just ask questions in natural language. Requirements:
 
 1. Look up real-time stock for a SKU in any warehouse (custom function tool).
 2. Look up the inbound status of any Purchase Order (custom function tool).
-3. Use an **MCP server** to plug into ZavaShop's existing *logistics-tracking MCP* (we mock this with the Microsoft Learn MCP server `https://learn.microsoft.com/api/mcp` for now).
+3. Use an **MCP server** to plug into ZavaShop's existing _logistics-tracking MCP_ (we mock this with the Microsoft Learn MCP server `https://learn.microsoft.com/api/mcp` for now).
 4. Always use the **GPT-5.5 model deployed in the Foundry project**.
 
 > This is kilometer zero of ZavaShop's AI rollout — get one agent running first.
@@ -74,7 +75,7 @@ Agent Framework topics involved in this LAB (Copilot already has them offline in
 
 ---
 
-## Tasks
+## Python Tasks
 
 ### Step 1 — Pick the ZavaShop Coding Agent in Agent Mode
 
@@ -164,7 +165,7 @@ def find_open_pos_by_sku(sku: str, warehouse: str | None = None) -> list[dict]:
 
 > **Do not inline mock dicts.** Every lookup comes from the shared fixtures under [`workshop/data/`](../data/README.md), so every LAB agrees on what `SKU-7421 @ SEA-01` means. To extend the dataset, edit those JSON files — not the Python.
 
-> **Why a third tool?** Turn 2 asks for the most recent open PO for the SKU mentioned in Turn 1. `get_po_status` only resolves a *known* PO number, so without `find_open_pos_by_sku` the model has no way to enumerate open POs. Adding it keeps Zara honest to the rule "answer using real data from the tools".
+> **Why a third tool?** Turn 2 asks for the most recent open PO for the SKU mentioned in Turn 1. `get_po_status` only resolves a _known_ PO number, so without `find_open_pos_by_sku` the model has no way to enumerate open POs. Adding it keeps Zara honest to the rule "answer using real data from the tools".
 
 The fixtures already cover `SKU-7421`, `SKU-3055`, `PO-20260518-001`, `PO-20260519-007` (the IDs Mei asks about), so you can run the conversation in Step 4 against real data right away.
 
@@ -231,17 +232,6 @@ await agent.run("Search the Microsoft Learn MCP for best practices on Azure AI F
 cd workshop/LAB01-inventory-agent
 python zara_agent.py
 ```
-
----
-
-## Acceptance criteria
-
-- [ ] The console shows three replies, and Turn 2 succeeds without you repeating the SKU (the `AgentSession` carries the context).
-- [ ] The stock and PO numbers in Turns 1 and 2 match the fixtures (`SKU-7421 @ SEA-01 = 312 on-hand`; `PO-20260518-001` is `in_transit` with ETA `2026-05-26`) — this proves the tools were really called and that no agent hallucinated the numbers.
-- [ ] The Turn 3 reply clearly contains Microsoft Learn content (proves the MCP was called).
-- [ ] `FOUNDRY_PROJECT_ENDPOINT` / `FOUNDRY_MODEL` are read from `os.environ` after `load_env()`; nothing is hardcoded.
-- [ ] No manual `close()` anywhere — credential, MCP tool and agent all go through `async with`.
-- [ ] `zara_agent.py` contains **no inline mock dict** — stock / PO data is read through `zava_data.find_stock` / `zava_data.find_po` / `zava_data.load_purchase_orders`.
 
 ---
 
@@ -369,7 +359,7 @@ static void LoadEnv()
 
 > **Do not inline mock dicts.** Same rule as Python: every lookup comes through [`workshop/data/ZavaData.cs`](../data/ZavaData.cs) so all LABs agree on what `SKU-7421 @ SEA-01` means.
 
-> **Why a third tool?** Same reason as the Python track — Turn 2 asks for the most recent open PO for the SKU mentioned in Turn 1. `GetPoStatus` only resolves a *known* PO number; `FindOpenPosBySku` is what lets Zara enumerate. Without it, Turn 2 will hallucinate.
+> **Why a third tool?** Same reason as the Python track — Turn 2 asks for the most recent open PO for the SKU mentioned in Turn 1. `GetPoStatus` only resolves a _known_ PO number; `FindOpenPosBySku` is what lets Zara enumerate. Without it, Turn 2 will hallucinate.
 
 ### Step 4 — Create the agent and mount the MCP tool (C#)
 
@@ -438,12 +428,21 @@ dotnet run
 
 The acceptance criteria above apply unchanged — same `on_hand=312`, same `PO-20260518-001` in_transit ETA `2026-05-26`, same Learn-MCP content in turn 3, same "no inline mock dict" rule (everything goes through `ZavaData`).
 
+## Acceptance criteria
+
+- [x] The console shows three replies, and Turn 2 succeeds without you repeating the SKU (the `AgentSession` carries the context).
+- [x] The stock and PO numbers in Turns 1 and 2 match the fixtures (`SKU-7421 @ SEA-01 = 312 on-hand`; `PO-20260518-001` is `in_transit` with ETA `2026-05-26`) — this proves the tools were really called and that no agent hallucinated the numbers.
+- [x] The Turn 3 reply clearly contains Microsoft Learn content (proves the MCP was called).
+- [x] `FOUNDRY_PROJECT_ENDPOINT` / `FOUNDRY_MODEL` are read from `os.environ` after `load_env()`; nothing is hardcoded.
+- [x] No manual `close()` anywhere — credential, MCP tool and agent all go through `async with`.
+- [xß] `zara_agent.py` contains **no inline mock dict** — stock / PO data is read through `zava_data.find_stock` / `zava_data.find_po` / `zava_data.load_purchase_orders`.
+
 ---
 
 ## Story handoff
 
 After a day of using Zara, Mei's question count drops from 60 to 4. She drops a 🎉 in the internal Teams channel — and immediately files a new request:
 
-> *"Pierre on the procurement team has it way worse than me. He doesn't check stock — he checks shipping schedules across 8 suppliers, and the tools are everywhere, with token swaps every time he logs in. Can you build him one too?"*
+> _"Pierre on the procurement team has it way worse than me. He doesn't check stock — he checks shipping schedules across 8 suppliers, and the tools are everywhere, with token swaps every time he logs in. Can you build him one too?"_
 
 — That kicks off [LAB 2](../LAB02-procurement-toolbox/README.md).
